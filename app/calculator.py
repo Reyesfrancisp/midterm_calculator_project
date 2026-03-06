@@ -2,7 +2,7 @@
 import sys
 from colorama import init, Fore, Style
 from app.input_validators import validate_number
-from app.calculation import OperationFactory
+from app.calculation import OperationFactory, CalculateCommand, CommandInvoker
 from app.history import HistoryManager, AutoSaveObserver
 from app.logger import LoggingObserver
 from app.exceptions import CalculatorException
@@ -15,13 +15,17 @@ class CalculatorFacade:
         self.history = HistoryManager()
         self.history.add_observer(AutoSaveObserver())
         self.history.add_observer(LoggingObserver())
+        self.invoker = CommandInvoker() # Initialize the Command Invoker
 
     def calculate(self, op_name: str, a_str: str, b_str: str):
         try:
             a = validate_number(a_str)
             b = validate_number(b_str)
-            strategy = OperationFactory.get_strategy(op_name)
-            result = strategy.execute(a, b)
+            
+            # Use the Command Pattern to encapsulate and execute the request
+            command = CalculateCommand(op_name, a, b)
+            result = self.invoker.execute_command(command)
+            
             self.history.add_record(op_name, a, b, result)
             
             display_result = int(result) if result.is_integer() else result
