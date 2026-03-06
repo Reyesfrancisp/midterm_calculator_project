@@ -50,3 +50,32 @@ def test_repl_data_commands(mock_save, mock_exists, command_chain, expected_out,
     with patch('builtins.input', side_effect=command_chain):
         repl()
         assert expected_out in capsys.readouterr().out
+
+@patch('app.history.HistoryManager.save_history', return_value=False)
+@patch('app.history.HistoryManager.undo', return_value=False)
+@patch('app.history.HistoryManager.redo', return_value=False)
+@patch('app.history.HistoryManager.load_history', return_value=False)
+def test_repl_command_failures(mock_load, mock_redo, mock_undo, mock_save, capsys):
+    """Simulates failures to cover the else branches and the usage warning (line 115)."""
+    inputs = ['undo', 'redo', 'save', 'load', 'add 5', 'exit']
+    with patch('builtins.input', side_effect=inputs):
+        repl()
+        out = capsys.readouterr().out
+        assert "Cannot undo" in out
+        assert "Cannot redo" in out
+        assert "Error saving history" in out
+        assert "No existing history found" in out
+        assert "Usage: <operation> <x> <y>" in out
+
+@patch('app.history.HistoryManager.undo', return_value=True)
+@patch('app.history.HistoryManager.redo', return_value=True)
+@patch('app.history.HistoryManager.load_history', return_value=True)
+def test_repl_command_success_paths(mock_load, mock_redo, mock_undo, capsys):
+    """Forces undo, redo, and load to succeed to cover their 'if' blocks."""
+    inputs = ['undo', 'redo', 'load', 'exit']
+    with patch('builtins.input', side_effect=inputs):
+        repl()
+        out = capsys.readouterr().out
+        assert "Reverted to previous state" in out
+        assert "Restored state" in out
+        assert "History manually loaded" in out

@@ -56,6 +56,14 @@ def test_display(history_manager, capsys):
 def test_load_history_empty_data_error(mock_exists, mock_read_csv, history_manager):
     assert history_manager.load_history() is False
 
-@patch('app.history.pd.DataFrame.to_csv', side_effect=Exception("Mock Error"))
-def test_save_history_exception(mock_to_csv, history_manager):
+@patch('app.history.os.makedirs', side_effect=Exception("Disk Full Error"))
+def test_save_history_exception_os(mock_makedirs, history_manager):
+    """Forces an OS exception during save to hit the except block."""
     assert history_manager.save_history() is False
+
+@patch('app.history.pd.DataFrame.to_csv')
+def test_save_history_success_path(mock_to_csv):
+    """Allows save_history to complete successfully without throwing an exception."""
+    hm = HistoryManager()
+    assert hm.save_history() is True
+    mock_to_csv.assert_called_once()
