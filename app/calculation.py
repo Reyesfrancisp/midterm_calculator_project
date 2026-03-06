@@ -34,7 +34,7 @@ class Command(ABC):
     """Abstract Command interface."""
     @abstractmethod
     def execute(self) -> float:
-        pass
+        pass  # pragma: no cover
 
 class CalculateCommand(Command):
     """Concrete command to perform a calculation. Encapsulates the request."""

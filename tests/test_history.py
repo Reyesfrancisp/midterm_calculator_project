@@ -50,3 +50,12 @@ def test_display(history_manager, capsys):
     history_manager.add_record('add', 1, 1, 2)
     history_manager.display()
     assert "add" in capsys.readouterr().out
+
+@patch('app.history.pd.read_csv', side_effect=pd.errors.EmptyDataError)
+@patch('app.history.os.path.exists', return_value=True)
+def test_load_history_empty_data_error(mock_exists, mock_read_csv, history_manager):
+    assert history_manager.load_history() is False
+
+@patch('app.history.pd.DataFrame.to_csv', side_effect=Exception("Mock Error"))
+def test_save_history_exception(mock_to_csv, history_manager):
+    assert history_manager.save_history() is False

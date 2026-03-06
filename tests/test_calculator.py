@@ -34,4 +34,19 @@ def test_repl_commands(mock_exists, inputs, expected_out, capsys):
 
 @patch('builtins.input', side_effect=EOFError)
 def test_repl_eof(mock_input):
-    repl()  # Should exit cleanly
+    repl()
+
+@pytest.mark.parametrize("command_chain, expected_out", [
+    (['history', 'exit'], 'History is empty.'),
+    (['clear', 'exit'], 'History cleared.'),
+    (['undo', 'exit'], 'Cannot undo.'),
+    (['redo', 'exit'], 'Cannot redo.'),
+    (['save', 'exit'], 'History manually saved'),
+    (['load', 'exit'], 'No existing history found')
+])
+@patch('app.history.os.path.exists', return_value=False)
+@patch('app.history.HistoryManager.save_history', return_value=True)
+def test_repl_data_commands(mock_save, mock_exists, command_chain, expected_out, capsys):
+    with patch('builtins.input', side_effect=command_chain):
+        repl()
+        assert expected_out in capsys.readouterr().out

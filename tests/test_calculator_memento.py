@@ -20,3 +20,14 @@ def test_caretaker_undo_redo():
     redone_df, success = caretaker.redo(restored_df)
     assert success is True
     assert redone_df.equals(df2)
+
+@pytest.mark.parametrize("empty_data", [{'val': []}])
+def test_caretaker_empty_stacks(empty_data):
+    caretaker = HistoryCaretaker()
+    df = pd.DataFrame(empty_data)
+    
+    _, success = caretaker.undo(df)
+    assert success is False
+    
+    _, success = caretaker.redo(df)
+    assert success is False
