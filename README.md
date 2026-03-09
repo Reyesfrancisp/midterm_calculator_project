@@ -2,8 +2,6 @@
 
 A robust, command-line calculator application built in Python. This project features a continuous Read-Eval-Print Loop (REPL), advanced history tracking using Pandas, and state traversal (Undo/Redo) using the Memento design pattern.
 
----
-
 ## ✨ Features & Architecture
 
 * **Advanced Mathematics:** Perform Addition, Subtraction, Multiplication, Division, Power, and Root operations.
@@ -16,7 +14,7 @@ A robust, command-line calculator application built in Python. This project feat
 * **Observer:** Automatically monitors calculation events in the background to trigger data auto-saves.
 * **Memento:** Safely stores deep copies of the history state, enabling flawless `undo` and `redo` time-travel capabilities.
 
----
+
 
 ## 🚀 Setup Instructions
 
@@ -80,11 +78,10 @@ Once the REPL starts, you can use the following commands:
 | **`divide`** | `divide 8 2` | Divides the first number by the second. |
 | **`power`** | `power 2 3` | Raises the first number to the power of the second. |
 | **`root`** | `root 9 2` | Calculates the nth root of the first number. |
-| **`log`** | `log 100 10` | Calculates the logarithm of the first number with the specified base. |
-| **`mean`** | `mean 2 4 6 8` | Calculates the average (mean) of a list of numbers. |
-| **`median`** | `median 1 3 5` | Finds the middle value (median) of a list of numbers. |
-| **`stddev`** | `stddev 1 2 3 4` | Calculates the standard deviation of a dataset. |
-| **`variance`** | `variance 1 2 3` | Calculates the variance of a dataset. |
+| **`modulus`** | `modulus 10 3` | Calculates the remainder of division. |
+| **`int_divide`**| `int_divide 10 3` | Performs integer (floor) division. |
+| **`percent`** | `percent 1 4` | Calculates what percentage the first number is of the second. |
+| **`abs_diff`** | `abs_diff 5 10` | Calculates the absolute difference between two numbers. |
 | **`history`** | `history` | Displays a clean Pandas table of your past calculations. |
 | **`clear`** | `clear` | Wipes the current calculation history session. |
 | **`undo`** | `undo` | Reverts the calculation history to the previous state. |
